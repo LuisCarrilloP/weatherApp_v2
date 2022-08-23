@@ -17,8 +17,7 @@ function App() {
   const weatherCondition = `${weatherInfo.weather?.[0].main}`
   const [ changeBg, setChangeBg ] = useState(weatherCondition) 
 
-  const myApi = "050cbfec9ad0f4fe20d51d885442025f"
-  //const apiExtra = "8c1743e8bb31396e83e27d5f01d73dfc"
+  
 
 
 
@@ -46,12 +45,14 @@ function App() {
   useEffect(() => {
     function success(pos) {
       const crd = pos.coords;
+      const myApi = "050cbfec9ad0f4fe20d51d885442025f"
+      //const apiExtra = "8c1743e8bb31396e83e27d5f01d73dfc"
   
         axios
           .get(`https://api.openweathermap.org/data/2.5/weather?lat=${crd.latitude}&lon=${crd.longitude}&appid=${myApi}`)
           .then(res => {
             setWeatherInfo(res.data)
-            setTemp((res.data.main.temp - 273.15).toFixed(1))
+            setTemp((res.data.main.temp - 273.15))
             setChangeBg(res.data.weather?.[0].main)
           })  
     }
@@ -67,10 +68,10 @@ function App() {
 
   const toggleUnit = () => {
     if(toggleKC){
-      setTemp(((temp - 32) * 5/9).toFixed(1))
+      setTemp(temp*1.8+32)
       setToggleKC(false)
     }else{
-      setTemp(((temp * 9/5) + 32).toFixed(1))
+      setTemp((temp-32)/1.8)
       setToggleKC(true)
     }
   }
@@ -87,7 +88,7 @@ function App() {
             <div className='weather-icon'>
               
                 <img src={`http://openweathermap.org/img/wn/${weatherInfo.weather?.[0].icon}@2x.png`} alt="" width="180px"/>
-                <h5>{temp} {!toggleKC ? "ºC" : "ºF"}</h5>
+                <h5>{Math.round(temp)} {toggleKC ? "ºC" : "ºF"}</h5>
               
             </div>
             <div className='weather-info'>
